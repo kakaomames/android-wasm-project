@@ -1,0 +1,44 @@
+name: Minecraft WE Auto-Build
+
+on:
+  workflow_dispatch: # ボタン一発で手動起動！
+  push:
+    # branches: [ main ]
+    # buildのコミットでループしないように除外
+    paths-ignore:
+      - 'dist/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # コミットを書き戻すために必要！
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup environment
+        run: |
+          bash start.sh
+
+      - name: Build CheerpJ CLI from source
+        run: |
+          # 1. リポジトリをクローン（またはサブモジュールとして追加）
+          echo "1-finished"
+          
+
+      - name: Fetch and Compile
+        run: |
+          # bash start.sh
+          cheerpj-cli release/26.2.jar -o dist/
+          cp -r assets dist/
+          cp index.html dist/
+
+      - name: Auto-commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist/
+          # 変更がある場合のみコミット
+          git diff --quiet && git diff --staged --quiet || (git commit -m "build: auto-compile minecraft web edition" && git push)
