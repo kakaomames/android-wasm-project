@@ -2,11 +2,6 @@ name: Android-Wasm
 
 on:
   workflow_dispatch: # ボタン一発で手動起動！
-  push:
-    # branches: [ main ]
-    # buildのコミットでループしないように除外
-    paths-ignore:
-      - 'dist/**'
 
 jobs:
   build:
@@ -18,22 +13,15 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup environment
+      - name: Start!!
         run: |
           bash start.sh
 
-      - name: Build CheerpJ CLI from source
+      - name: skip
         run: |
           # 1. リポジトリをクローン（またはサブモジュールとして追加）
           echo "1-finished"
-          
-
-      - name: Fetch and Compile
-        run: |
-          # bash start.sh
-          cheerpj-cli release/26.2.jar -o dist/
-          cp -r assets dist/
-          cp index.html dist/
+  
 
       - name: Auto-commit results
         run: |
