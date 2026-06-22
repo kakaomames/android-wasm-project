@@ -1,4 +1,4 @@
-name: Minecraft WE Auto-Build
+name: Android-Wasm
 
 on:
   workflow_dispatch: # ボタン一発で手動起動！
