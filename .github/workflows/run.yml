@@ -13,7 +13,19 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install RetDec
+      - name: Cache RetDec Installation
+        id: cache-retdec
+        uses: actions/cache@v4
+        with:
+          # ここに保存したいディレクトリを指定する
+          path: |
+            /usr/local/bin/retdec-*
+            /usr/local/include/retdec
+            /usr/local/lib/retdec
+          key: ${{ runner.os }}-retdec-v1 # バージョン管理用キー
+
+      - name: Install/Build RetDec
+        if: steps.cache-retdec.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential git python3
