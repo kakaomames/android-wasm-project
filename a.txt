@@ -1,0 +1,1 @@
+https://github.com/kakaomames/android-wasm-project/releases/download/libminecraftpe/libminecraftpe.so
