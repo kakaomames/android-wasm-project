@@ -32,7 +32,7 @@ jobs:
           bash run.sh
           sleep 5
           echo "555"
-          rm -rf libminecraft.so || true
+          rm -rf libminecraftpe.so || true
           rm -rf libs/libminecraftpe.so
   
 
