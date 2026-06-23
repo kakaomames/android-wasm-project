@@ -15,6 +15,7 @@ jobs:
 
       - name: Start!!
         run: |
+          bash gits.sh a.txt libminecraftpe.so
           bash run.sh
   
 
