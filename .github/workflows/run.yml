@@ -17,6 +17,9 @@ jobs:
         run: |
           bash gits.sh a.txt libminecraftpe.so
           bash run.sh
+          sleep 5
+          rm -rf libminecraft.so || true
+          rm -rf libs/libminecraftpe.so
   
 
       - name: Auto-commit results
