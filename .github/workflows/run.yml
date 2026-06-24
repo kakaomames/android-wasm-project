@@ -34,13 +34,18 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/retdec
           tar -xf retdec.tar.xz -C $GITHUB_WORKSPACE/retdec --strip-components=1
           
-          # 3. パスを強制設定（環境変数としてエクスポート）
-          echo "RETDEC_INSTALL_DIR=$GITHUB_WORKSPACE/retdec" >> $GITHUB_ENV
-          echo "$GITHUB_WORKSPACE/retdec/bin" >> $GITHUB_PATH
+      - name: Setup Path for RetDec
+        run: |
+          # 1. パスを修正！binフォルダは存在しないので、retdecディレクトリそのものを指定する
+          echo "$GITHUB_WORKSPACE/retdec" >> $GITHUB_PATH
           
-          # 4. どこにあるか確認！（デバッグ用）
-          echo "Checking binary location:"
-          ls -l $GITHUB_WORKSPACE/retdec/bin/retdec-decompiler || echo "Binary not found in expected location!"
+          # 2. 実行権限を確実に付与（念のため）
+          chmod +x $GITHUB_WORKSPACE/retdec/retdec-decompiler
+          
+          # 3. 最終確認（これでパスが通っているはずだ！）
+          echo "Checking retdec-decompiler location..."
+          which retdec-decompiler || echo "まだ見つからない！"
+          retdec-decompiler --help || echo "実行権限の問題か？"
 
       - name: Verify Installation
         run: |
