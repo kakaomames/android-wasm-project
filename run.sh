@@ -35,7 +35,7 @@ for lib in "${files[@]}"; do
 
     # 1. 逆コンパイル (RetDec)
     missionLog "INFO" "[$filename] をCコードへ逆コンパイル中..."
-    if retdec-decompiler "$lib" -o "$OUTPUT_DIR/$filename.c"; then
+    if retdec-decompiler -a arm64 "$lib" -o "$OUTPUT_DIR/$filename.c"; then
         missionLog "SUCCESS" "[$filename] のCコード生成完了！"
     else
         missionLog "FAILURE" "[$filename] の逆コンパイルでエラー発生。"
