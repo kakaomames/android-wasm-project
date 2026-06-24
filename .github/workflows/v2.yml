@@ -2,6 +2,9 @@
 name: Split AOSP Archive
 on:
   workflow_dispatch:
+# ここを追加する！
+permissions:
+  contents: write
 
 jobs:
   archive:
