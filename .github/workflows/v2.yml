@@ -1,42 +1,45 @@
 # .github/workflows/bundle-android-src.yml
-name: Sync Entire AOSP
+name: Split AOSP Archive
 on:
   workflow_dispatch:
 
 jobs:
-  sync:
+  archive:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Repo Tool
+      - name: Install Repo
         run: |
-          # Androidの管理ツール 'repo' をインストール
           mkdir -p ~/bin
           curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
           chmod a+x ~/bin/repo
           echo "$HOME/bin" >> $GITHUB_PATH
 
-      - name: Initialize AOSP Manifest
+      - name: Init and Sync
         run: |
-          # AOSPの全リポジトリを同期する準備
           git config --global user.name "Gemini-Programming-Unit"
           git config --global user.email "team@example.com"
-          repo init -u https://android.googlesource.com/platform/manifest -b android-15.0.0_r1
-          
-      - name: Sync Everything
-        run: |
-          # 全てをダウンロード（鬼のような容量と時間がかかるぞ！）
-          repo sync -j$(nproc) --no-tags --no-clone-bundle --depth 1
+          # --depth=1 はここで指定する！
+          repo init -u https://android.googlesource.com/platform/manifest -b android-15.0.0_r1 --depth=1
+          repo sync -j$(nproc) --no-tags --no-clone-bundle
 
-      - name: Package Everything
+      - name: Archive by Repository
         run: |
-          # 全てをtarで固める（まさに「全財産」だ）
-          tar -czf android-15-universe.tar.gz .
+          # ディレクトリごとに tar 圧縮する
+          # .repo ディレクトリはメタデータなので除外して、個別のプロジェクトディレクトリを圧縮
+          mkdir archives
+          for dir in */; do
+            if [ "$dir" != ".repo/" ] && [ -d "$dir" ]; then
+              tar -czf "archives/${dir%/}.tar.gz" "$dir"
+            fi
+          done
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: android-15-full-universe
-          name: "Android 15 Full Universe Archive"
-          files: android-15-universe.tar.gz
+          tag_name: android-15-split-archive
+          name: "Android 15 Split Archive"
+          # archives フォルダ内のすべての tar.gz をアップロード
+          files: archives/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
