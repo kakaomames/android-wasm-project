@@ -24,22 +24,31 @@ jobs:
             /usr/local/include/retdec
             /usr/local/lib/retdec
           key: ${{ runner.os }}-retdec-v1 # バージョン管理用キー
+      # RetDecのビルド完了後、またはビルドの直前に追加
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 'latest'
+          actions-cache-folder: 'emsdk-cache'
 
-      - name: Install/Build RetDec
-        if: steps.cache-retdec.outputs.cache-hit != 'true'
+      - name: Download and Extract RetDec
         run: |
-          mkdir -p $GITHUB_WORKSPACE/retdec-install
-          git clone https://github.com/avast/retdec
-          cd retdec
-          mkdir build && cd build
-          # インストール先をワークスペース内のフォルダに変更
-          cmake .. -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/retdec-install
-          make -j$(nproc)
-          make install
-          cd ../.. && rm -rf retdec
+          # 1. ダウンロード
+          curl -L https://github.com/avast/retdec/releases/download/v5.0/RetDec-v5.0-Linux-Release.tar.xz -o retdec.tar.xz
+          # 2. 解凍（展開先を明確にする）
+          mkdir -p $GITHUB_WORKSPACE/retdec
+          tar -xf retdec.tar.xz -C $GITHUB_WORKSPACE/retdec --strip-components=1
+          
+      - name: Add RetDec to PATH
+        run: echo "$GITHUB_WORKSPACE/retdec/bin" >> $GITHUB_PATH
+
+      - name: Verify Installation
+        run: |
+          # ちゃんと動くか確認
+          retdec-decompiler --help
 
       - name: Add RetDec to PATH
-        run: echo "$GITHUB_WORKSPACE/retdec-install/bin" >> $GITHUB_PATH
+        run: echo "$GITHUB_WORKSPACE/retdec-install/bin" >> $GITHUB_PATH || true
 
       - name: Start!!
         run: |
