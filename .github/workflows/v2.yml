@@ -1,20 +1,35 @@
 # .github/workflows/bundle-android-src.yml
-name: Bundle Android Sources
-on: [push]
+name: Build Android 15 Source JAR
+on:
+  # 手動で実行できるようにする（これが君の言っていた「コマンドでプッシュ」の代わりだ！）
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Download Android Sources
+      - name: Checkout Source (Android 15)
         run: |
-          # SDKのソースを取得（または公式リポジトリをshallow clone）
-          git clone --depth 1 https://android.googlesource.com/platform/frameworks/base.git ./android-src
+          # Android 15 (API 35) のタグを指定して取得（shallow clone）
+          # android-15.0.0_r1 は安定版の一つだ
+          git clone --depth 1 -b android-15.0.0_r1 https://android.googlesource.com/platform/frameworks/base.git ./android-src
+      
       - name: Package to JAR
         run: |
-          # .java ファイルを全部探して、JARとして固める
-          find ./android-src -name "*.java" > sources.txt
-          jar cf android-all-sources.jar @sources.txt
+          # フォルダ全体をJARに固める。-C でディレクトリを指定してパス構造を保持する
+          jar cf android-15-all-sources.jar -C ./android-src .
+          
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: android-all-sources.jar
+          tag_name: android-15-sdk
+          name: "Android 15 Source Code (API 35)"
+          files: android-15-all-sources.jar
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
