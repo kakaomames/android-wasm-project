@@ -13,15 +13,10 @@ jobs:
           curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
           chmod a+x ~/bin/repo
           echo "$HOME/bin" >> $GITHUB_PATH
+      
+      - name: Extract Android Core
+        run: echo "jj"
 
-      name: Extract Android Core
-on:
-  workflow_dispatch:
-
-jobs:
-  extract:
-    runs-on: ubuntu-latest
-    steps:
       - name: Surgical Strike (Clone only essential parts)
         run: |
           # 脳：Javaフレームワークのベース
