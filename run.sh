@@ -39,11 +39,15 @@ for lib in "${files[@]}"; do
     # 1. 逆コンパイル (RetDec)
     missionLog "INFO" "[$filename] をCコードへ逆コンパイル中..."
     if retdec-decompiler -a arm64 "$lib" -o "$OUTPUT_DIR/$filename.c"; then
+        git add ./$OUTPUT_DIR
+        git commit -m "build: update generated source code"
+        git push
         missionLog "SUCCESS" "[$filename] のCコード生成完了！"
     else
         missionLog "FAILURE" "[$filename] の逆コンパイルでエラー発生。"
         continue
     fi
+
 
     # 2. Wasmコンパイル (Emscripten)
     missionLog "INFO" "[$filename] をWasmへコンパイル中..."
