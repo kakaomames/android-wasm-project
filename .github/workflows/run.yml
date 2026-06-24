@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: false  # ← これを入れる！サブモジュール取得をオフにする
 
       - name: Cache RetDec Installation
         id: cache-retdec
