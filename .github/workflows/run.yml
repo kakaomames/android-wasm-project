@@ -1,69 +1,58 @@
 name: Android-Wasm-v2
 
 on:
-  workflow_dispatch: # ボタン一発で手動起動！
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # コミットを書き戻すために必要！
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          submodules: false  # ← これを入れる！サブモジュール取得をオフにする
+          submodules: false
 
-      - name: Cache RetDec Installation
-        id: cache-retdec
-        uses: actions/cache@v4
-        with:
-          # ここに保存したいディレクトリを指定する
-          path: |
-            /usr/local/bin/retdec-*
-            /usr/local/include/retdec
-            /usr/local/lib/retdec
-          key: ${{ runner.os }}-retdec-v1 # バージョン管理用キー
-      # RetDecのビルド完了後、またはビルドの直前に追加
+      # Emscriptenの準備
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14
         with:
           version: 'latest'
           actions-cache-folder: 'emsdk-cache'
 
+      # RetDecの準備
       - name: Download and Extract RetDec
         run: |
-          # 1. ダウンロード
           curl -L https://github.com/avast/retdec/releases/download/v5.0/RetDec-v5.0-Linux-Release.tar.xz -o retdec.tar.xz
-          # 2. 解凍（展開先を明確にする）
           mkdir -p $GITHUB_WORKSPACE/retdec
           tar -xf retdec.tar.xz -C $GITHUB_WORKSPACE/retdec --strip-components=1
-          
-      - name: Add RetDec to PATH
-        run: echo "$GITHUB_WORKSPACE/retdec/bin" >> $GITHUB_PATH
+          echo "$GITHUB_WORKSPACE/retdec/bin" >> $GITHUB_PATH
 
-      - name: Verify Installation
-        run: |
-          # ちゃんと動くか確認
-          retdec-decompiler --help
-
-      - name: Add RetDec to PATH
-        run: echo "$GITHUB_WORKSPACE/retdec-install/bin" >> $GITHUB_PATH || true
-
+      # 攻略開始！
       - name: Start!!
         run: |
-          # 実行前にパスが通っているか確認
-          retdec-decompiler --help || echo "RetDec not found!"
+          # パス確認
+          retdec-decompiler --help || echo "RetDec path error!"
+          
+          # 調査開始
           bash gits.sh a.txt libminecraftpe.so
           bash run.sh
-          rm -rf libminecraftpe.so || true
-          rm -rf libs/libminecraftpe.so
-  
+          
+          # 不要な重荷は捨てる
+          rm -f libminecraftpe.so || true
+          rm -f libs/libminecraftpe.so || true
 
+      # 成果報告（Auto-commit）
       - name: Auto-commit results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          # 変更がある場合のみコミット
-          git diff --quiet && git diff --staged --quiet || (git commit -m "build: auto-compile minecraft web edition" && git push)
+          # 差分があるときだけコミット・プッシュ
+          if ! git diff --staged --quiet; then
+            git commit -m "build: auto-compile minecraft web edition"
+            git push
+          else
+            echo "No changes detected. Skipping commit."
+          fi
