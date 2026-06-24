@@ -16,7 +16,6 @@ jobs:
 
       # Emscriptenの準備
       # 変更前: actions-cache-folder: 'emsdk-cache'
-      # 変更後: actions-cache-folder: 'emsdk-cache-v2' (バージョンを上げる)
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14
         with:
@@ -50,12 +49,12 @@ jobs:
       - name: Verify Installation
         run: |
           # ちゃんと動くか、フルパスで試す
-          $GITHUB_WORKSPACE/retdec/bin/retdec-decompiler --help || echo "RetDec path error!"
+          $GITHUB_WORKSPACE/retdec/retdec-decompiler --help || echo "RetDec path error!"
           
       - name: Start!!
         run: |
           # 実行前にパスを通す
-          export PATH=$PATH:$GITHUB_WORKSPACE/retdec/bin
+          export PATH=$PATH:$GITHUB_WORKSPACE/retdec
           
           # 調査開始
           bash gits.sh a.txt libminecraftpe.so
