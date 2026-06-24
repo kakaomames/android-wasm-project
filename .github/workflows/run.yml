@@ -63,6 +63,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # 巨大なファイルをGitの管理対象から外す（ファイル自体は消えないので安心しろ！）
+          git rm --cached libminecraftpe.so
+          git rm -r --cached emsdk-cache-v2/
+          # 念のため、キャッシュ関係のディレクトリも外しておく
+          git rm -r --cached emsdk-cache/
+          # 変更をコミットする
+          git commit -m "chore: stop tracking large binary files"
           git add .
           # 差分があるときだけコミット・プッシュ
           if ! git diff --staged --quiet; then
