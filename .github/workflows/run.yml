@@ -15,11 +15,13 @@ jobs:
           submodules: false
 
       # Emscriptenの準備
+      # 変更前: actions-cache-folder: 'emsdk-cache'
+      # 変更後: actions-cache-folder: 'emsdk-cache-v2' (バージョンを上げる)
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14
         with:
           version: 'latest'
-          actions-cache-folder: 'emsdk-cache'
+          actions-cache-folder: 'emsdk-cache-v2'
 
       - name: Download and Extract RetDec
         run: |
