@@ -41,10 +41,11 @@ for lib in "${files[@]}"; do
     # 1. 逆コンパイル (RetDec)
     missionLog "INFO" "[$filename] をCコードへ逆コンパイル中..."
     if retdec-decompiler -a arm64 "$lib" -o "$OUTPUT_DIR/$filename.c"; then
-        git add ./$OUTPUT_DIR || true
-        git commit -m "build: update generated source code" || true
-        git push || true
-        missionLog "SUCCESS" "[$filename] のCコード生成完了！"
+        # git add ./$OUTPUT_DIR || true
+        # git commit -m "build: update generated source code" || true
+        # git push || true
+        missionLog "SUCCESS" "[$OUTPUT_DIR/$filename.c] のCコード生成完了！"
+        ls -F $OUTPUT_DIR/ | grep ".c"
     else
         missionLog "FAILURE" "[$filename] の逆コンパイルでエラー発生。"
         continue
