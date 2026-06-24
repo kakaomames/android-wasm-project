@@ -27,23 +27,25 @@ jobs:
       - name: Install/Build RetDec
         if: steps.cache-retdec.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake build-essential git python3
+          mkdir -p $GITHUB_WORKSPACE/retdec-install
           git clone https://github.com/avast/retdec
           cd retdec
           mkdir build && cd build
-          cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
+          # インストール先をワークスペース内のフォルダに変更
+          cmake .. -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/retdec-install
           make -j$(nproc)
-          sudo make install
+          make install
           cd ../.. && rm -rf retdec
 
+      - name: Add RetDec to PATH
+        run: echo "$GITHUB_WORKSPACE/retdec-install/bin" >> $GITHUB_PATH
 
       - name: Start!!
         run: |
+          # 実行前にパスが通っているか確認
+          retdec-decompiler --help || echo "RetDec not found!"
           bash gits.sh a.txt libminecraftpe.so
           bash run.sh
-          sleep 5
-          echo "555"
           rm -rf libminecraftpe.so || true
           rm -rf libs/libminecraftpe.so
   
