@@ -1,0 +1,20 @@
+# .github/workflows/bundle-android-src.yml
+name: Bundle Android Sources
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Android Sources
+        run: |
+          # SDKのソースを取得（または公式リポジトリをshallow clone）
+          git clone --depth 1 https://android.googlesource.com/platform/frameworks/base.git ./android-src
+      - name: Package to JAR
+        run: |
+          # .java ファイルを全部探して、JARとして固める
+          find ./android-src -name "*.java" > sources.txt
+          jar cf android-all-sources.jar @sources.txt
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: android-all-sources.jar
