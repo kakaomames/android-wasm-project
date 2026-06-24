@@ -1,35 +1,42 @@
 # .github/workflows/bundle-android-src.yml
-name: Build Android 15 Source JAR
+name: Sync Entire AOSP
 on:
-  # 手動で実行できるようにする（これが君の言っていた「コマンドでプッシュ」の代わりだ！）
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Source (Android 15)
+      - name: Install Repo Tool
         run: |
-          # Android 15 (API 35) のタグを指定して取得（shallow clone）
-          # android-15.0.0_r1 は安定版の一つだ
-          git clone --depth 1 -b android-15.0.0_r1 https://android.googlesource.com/platform/frameworks/base.git ./android-src
-      
-      - name: Package to JAR
+          # Androidの管理ツール 'repo' をインストール
+          mkdir -p ~/bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Initialize AOSP Manifest
         run: |
-          # フォルダ全体をJARに固める。-C でディレクトリを指定してパス構造を保持する
-          jar cf android-15-all-sources.jar -C ./android-src .
+          # AOSPの全リポジトリを同期する準備
+          git config --global user.name "Gemini-Programming-Unit"
+          git config --global user.email "team@example.com"
+          repo init -u https://android.googlesource.com/platform/manifest -b android-15.0.0_r1
           
+      - name: Sync Everything
+        run: |
+          # 全てをダウンロード（鬼のような容量と時間がかかるぞ！）
+          repo sync -j$(nproc) --no-tags --no-clone-bundle --depth 1
+
+      - name: Package Everything
+        run: |
+          # 全てをtarで固める（まさに「全財産」だ）
+          tar -czf android-15-universe.tar.gz .
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: android-15-sdk
-          name: "Android 15 Source Code (API 35)"
-          files: android-15-all-sources.jar
-          draft: false
-          prerelease: false
+          tag_name: android-15-full-universe
+          name: "Android 15 Full Universe Archive"
+          files: android-15-universe.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
