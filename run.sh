@@ -45,7 +45,7 @@ for lib in "${files[@]}"; do
         # git commit -m "build: update generated source code" || true
         # git push || true
         missionLog "SUCCESS" "[$OUTPUT_DIR/$filename.c] のCコード生成完了！"
-        ls -F | grep "/" || true
+        ls -F ./output/ | grep "/" || true
         ls -F $OUTPUT_DIR/ | grep ".c" || true 
     else
         missionLog "FAILURE" "[$filename] の逆コンパイルでエラー発生。"
