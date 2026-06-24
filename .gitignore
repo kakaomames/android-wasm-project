@@ -1,2 +1,6 @@
+libminecraftpe.so
+libs/libminecraftpe.so
+emsdk-cache/
+emsdk-cache-v2/
 retdec/
 retdec.tar.xz
