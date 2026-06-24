@@ -32,6 +32,8 @@ jobs:
       # 攻略開始！
       - name: Start!!
         run: |
+          echo "retdec/" >> .gitignore
+          echo "retdec.tar.xz" >> .gitignore
           # パス確認
           retdec-decompiler --help || echo "RetDec path error!"
           
