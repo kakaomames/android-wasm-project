@@ -2,6 +2,7 @@
 
 # これを run.sh の一番上に追加！
 export PATH=$PATH:/home/runner/work/android-wasm-project/android-wasm-project/retdec/bin
+ls -F
 # --- 初期設定 ---
 # どこかで失敗したら即座に停止する設定
 set -e
