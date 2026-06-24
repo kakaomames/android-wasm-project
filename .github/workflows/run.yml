@@ -21,29 +21,40 @@ jobs:
           version: 'latest'
           actions-cache-folder: 'emsdk-cache'
 
-      # RetDecの準備
       - name: Download and Extract RetDec
         run: |
+          # 1. gitignoreを作成（巨大ファイルをリポジトリに入れない！）
+          echo "retdec/" >> .gitignore
+          echo "retdec.tar.xz" >> .gitignore
+          
+          # 2. ダウンロードと展開
           curl -L https://github.com/avast/retdec/releases/download/v5.0/RetDec-v5.0-Linux-Release.tar.xz -o retdec.tar.xz
           mkdir -p $GITHUB_WORKSPACE/retdec
           tar -xf retdec.tar.xz -C $GITHUB_WORKSPACE/retdec --strip-components=1
+          
+          # 3. パスを強制設定（環境変数としてエクスポート）
+          echo "RETDEC_INSTALL_DIR=$GITHUB_WORKSPACE/retdec" >> $GITHUB_ENV
           echo "$GITHUB_WORKSPACE/retdec/bin" >> $GITHUB_PATH
+          
+          # 4. どこにあるか確認！（デバッグ用）
+          echo "Checking binary location:"
+          ls -l $GITHUB_WORKSPACE/retdec/bin/retdec-decompiler || echo "Binary not found in expected location!"
 
-      # 攻略開始！
+      - name: Verify Installation
+        run: |
+          # ちゃんと動くか、フルパスで試す
+          $GITHUB_WORKSPACE/retdec/bin/retdec-decompiler --help || echo "RetDec path error!"
+          
       - name: Start!!
         run: |
-          echo "retdec/" >> .gitignore
-          echo "retdec.tar.xz" >> .gitignore
-          # パス確認
-          retdec-decompiler --help || echo "RetDec path error!"
+          # 実行前にパスを通す
+          export PATH=$PATH:$GITHUB_WORKSPACE/retdec/bin
           
           # 調査開始
           bash gits.sh a.txt libminecraftpe.so
-          bash run.sh
           
-          # 不要な重荷は捨てる
-          rm -f libminecraftpe.so || true
-          rm -f libs/libminecraftpe.so || true
+          # run.sh の中から retdec-decompiler を呼ぶ際もパスが有効なはずだ
+          bash run.sh
 
       # 成果報告（Auto-commit）
       - name: Auto-commit results
