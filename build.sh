@@ -22,19 +22,12 @@ echo "⚙️ コンパイル処理を実行中..."
 # 出力先を明示的に指定（もしディレクトリを作っていないならここで作る）
 mkdir -p build_out
 
-emcc src/main.c \
-    -O3 \
-    -s WASM=1 \
-    -s MAIN_MODULE=1 \
-    -o build_out/index.html  # index.htmlにすればJSとWasmも一緒にできる
-# サイドモジュールのコンパイル (SIDE_MODULE=1)
-# サイドモジュール (将来の .so エミュレーション用)
-# .js を指定することで、glueコードも生成される
-emcc src/lib.c \
-    -O3 \
-    -s WASM=1 \
-    -s SIDE_MODULE=1 \
-    -o build_out/library.js
+# サイドモジュールビルド
+emcc library.c -s SIDE_MODULE=1 -o library.js
+
+# メインモジュールビルド (サイドモジュールの存在を意識する)
+emcc main.c -s MAIN_MODULE=1 -s LINKABLE=1 -o index.html
+
 
 # 【重要】本当にファイルがあるか確認する
 echo "🔍 成果物の確認:"
