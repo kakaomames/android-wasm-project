@@ -42,7 +42,7 @@ echo "🔍 ルートディレクトリの中身 (迷子を探す):"
 ls -la .
 
 # もしbuild_outが空なら、エラーで止めて原因を特定しやすくする
-if [ ! -f "build_out/index.html" ]; then
-    echo "❌ 警告: index.html が build_out/ に見当たらない！"
+if [ ! -f "build_out/*.html" ]; then
+    echo "❌ 警告: html が build_out/ に見当たらない！"
     exit 1
 fi
