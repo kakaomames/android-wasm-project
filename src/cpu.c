@@ -1,5 +1,15 @@
 #include "cpu.h"
+#include "mem_shim.h"
 #include <stdio.h>
+
+
+
+// --- ここにプロトタイプ宣言を追加して紹介状を渡す ---
+uint32_t read_memory_u32(uint64_t address); // mem_shim.h にも書くべきだが、とりあえずここで宣言
+void execute_mov(CPUState *cpu, uint32_t opcode);
+void execute_add(CPUState *cpu, uint32_t opcode);
+// --------------------------------------------------
+
 
 void cpu_init(CPUState *cpu) {
     for(int i=0; i<31; i++) cpu->x[i] = 0;
