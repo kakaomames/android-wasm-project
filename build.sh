@@ -23,8 +23,13 @@ mkdir -p build_out
 # ビルドコマンドを修正してHTMLを生成する
 # -lunicorn を追加してリンクする
 
-emcc src/main.c src/loader.c src/mem_shim.c -o build_out/index.html \
-    -s WASM=1 -s MAIN_MODULE=1 -lunicorn
+# Unicornのパスを明示的に指定してビルドする
+emcc src/main.c src/loader.c src/mem_shim.c \
+    -I./unicorn/include \
+    -L./unicorn/build \
+    -lunicorn \
+    -o build_out/index.html \
+    -s WASM=1 -s MAIN_MODULE=1
 
 
 
