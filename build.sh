@@ -22,12 +22,8 @@ echo "⚙️ コンパイル処理を実行中..."
 
 # メインモジュールをビルド
 # .soとの連携を見据えて MAIN_MODULE=1 を指定
-emcc src/main.c \
-    -O3 \
-    -s WASM=1 \
-    -s MAIN_MODULE=1 \
-    -s ALLOW_MEMORY_GROWTH=1 \
-    -o build_out/emulator.js
+emcc src/main.c -o index.html -s WASM=1
+
 
 echo "✅ ビルド完了！成果物は build_out/ に格納されたぞ。"
 
