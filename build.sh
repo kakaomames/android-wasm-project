@@ -21,17 +21,15 @@ fi
 
 echo "⚙️ コンパイル処理を実行中..."
 mkdir -p build_out
-# ビルドコマンドを修正してHTMLを生成する
-# -lunicorn を追加してリンクする
 
-# Unicornのパスを明示的に指定してビルドする
-# クォーテーションを整理した最強のコマンド
-emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c \
+# src/gpu.c を忘れずに追加した完全版コマンド
+emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c \
     -o build_out/gem-os.js \
     -s WASM=1 \
     -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" \
     -s "EXPORTED_FUNCTIONS=['_main','_run_emulator']" \
     -s ALLOW_MEMORY_GROWTH=1
+
 
 
 
