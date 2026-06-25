@@ -2,16 +2,43 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <unicorn/unicorn.h> // 武器：Unicorn Engine
 
-// 専門部隊のヘッダーを読み込む
+// 専門部隊のヘッダー
 #include "loader.h"
-#include "mem_shim.h" // メモリ管理用（mem_shim.cをコンパイル対象に入れること！）
+#include "mem_shim.h"
 
-// エミュレーションのメインループ（ダミーだが、ここにCPUロジックが入る）
+// エミュレーションのメインループ
 void run_emulator_loop() {
+    uc_engine *uc;
+    uc_err err;
+
+    printf("[Emulator] 脳(CPU)を起動する...\n");
+
+    // 1. ARM64モードでUnicornエンジンを初期化
+    err = uc_open(UC_ARCH_ARM64, UC_MODE_ARM, &uc);
+    if (err) {
+        printf("[Emulator] 致命的エラー: Unicornエンジンが起動しない! (Error: %u)\n", err);
+        return;
+    }
+
+    // 2. メモリ空間のリンク
+    // mem_shimで確保した領域をUnicornにマッピングする (仮のアドレス 0x10000000)
+    // ※実際にはAPKのベースアドレスをELF解析で特定してマッピングする
+    uint64_t mem_addr = 0x10000000;
+    size_t mem_size = 64 * 1024 * 1024; // 64MB
+    uc_mem_map(uc, mem_addr, mem_size, UC_PROT_ALL);
+
+    printf("[Emulator] メモリ空間(64MB)をCPUに接続完了。\n");
+
+    // 3. CPUの実行開始 (まずはPCをエントリーポイントへ設定)
     printf("[Emulator] CPUサイクルを開始する...\n");
-    // ここで命令フェッチ → デコード → 実行を行う
-    printf("[Emulator] 待機状態 (CPUエミュレータの接続を待っています)\n");
+    // ※本来はここにloaderから読み込んだバイナリを書き込む処理が必要
+    // err = uc_emu_start(uc, mem_addr, mem_addr + 0x1000, 0, 0);
+
+    printf("[Emulator] エミュレーション待機中。プログラムをロードせよ！\n");
+
+    uc_close(uc);
 }
 
 int main(int argc, char **argv) {
@@ -22,8 +49,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // 1. メモリ空間の確保 (仮想メモリの土台)
-    // 64MBをAndroidの仮想空間として確保
+    // 1. メモリ空間の確保
     init_guest_memory(1024 * 1024 * 64);
 
     // 2. SOファイルのロード
@@ -36,8 +62,8 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // 3. エミュレーション開始（転生の核心）
-    printf("[Main] メモリ確保完了、SOファイルロード成功！\n");
+    // 3. エミュレーション開始
+    printf("[Main] メモリ確保完了、SOファイルロード成功！エミュレータへ引き継ぐ。\n");
     run_emulator_loop();
 
     // 後始末
