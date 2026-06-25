@@ -21,6 +21,8 @@ jobs:
 
       - name: ビルドスクリプトを実行
         run: |
+          git clone https://github.com/unicorn-engine/unicorn.git
+
           chmod +x build.sh
           ./build.sh
 
