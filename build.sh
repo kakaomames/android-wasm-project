@@ -23,10 +23,10 @@ echo "⚙️ コンパイル処理を実行中..."
 mkdir -p build_out
 
 # サイドモジュールビルド
-emcc library.c -s SIDE_MODULE=1 -o library.js
+emcc src/library.c -s SIDE_MODULE=1 -o library.js
 
 # メインモジュールビルド (サイドモジュールの存在を意識する)
-emcc main.c -s MAIN_MODULE=1 -s LINKABLE=1 -o index.html
+emcc src/main.c -s MAIN_MODULE=1 -s LINKABLE=1 -o index.html
 
 
 # 【重要】本当にファイルがあるか確認する
