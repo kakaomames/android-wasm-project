@@ -31,6 +31,8 @@ jobs:
         run: |
           chmod +x ./scripts/process_apk.sh
           ./scripts/process_apk.sh
+          TIME=$(date "+%Y年%m月%d日") || true
+          echo "$TIMEに実行" > time.txt || true
 
 
       - name: Commit and Push Assets
