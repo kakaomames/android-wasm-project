@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <sys/mman.h>
+#include "mem_shim.h"
 
 // APK専用メモリ領域の管理構造体
 typedef struct {
