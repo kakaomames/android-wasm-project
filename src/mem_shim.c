@@ -10,11 +10,10 @@ typedef struct {
     size_t max_size;
 } MemoryManager;
 
-static MemoryManager guest_mem = {0};
+MemoryManager guest_mem = {0};
 
-// メモリ管理の初期化（起動時に一度だけ呼ぶ）
 void init_guest_memory(size_t total_size) {
-    guest_mem.base_ptr = malloc(total_size); // 実際にはWasmのメモリを拡張・確保する
+    guest_mem.base_ptr = malloc(total_size);
     guest_mem.current_offset = 0;
     guest_mem.max_size = total_size;
     printf("[Memory] APK用仮想メモリを %zu バイト確保した！\n", total_size);
