@@ -23,12 +23,13 @@ echo "⚙️ コンパイル処理を実行中..."
 mkdir -p build_out
 
 # src/gpu.c を忘れずに追加した完全版コマンド
-emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c \
+emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src/gps.c \
     -o build_out/gem-os.js \
     -s WASM=1 \
     -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" \
-    -s "EXPORTED_FUNCTIONS=['_main','_run_emulator']" \
+    -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" \
     -s ALLOW_MEMORY_GROWTH=1
+
 
 
 
