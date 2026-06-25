@@ -27,7 +27,7 @@ mkdir -p build_out
 # Unicornのパスを明示的に指定してビルドする
 # クォーテーションを整理した最強のコマンド
 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c \
-    -o build_out/gem-os.js \
+    -o build_out/index.html \
     -s WASM=1 \
     -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']"
 
