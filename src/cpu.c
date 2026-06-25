@@ -3,6 +3,8 @@
 #include <stdio.h>
 
 
+// mem_shim.c で定義されたメモリ管理構造体を参照するための宣言
+extern MemoryManager guest_mem; 
 
 // --- ここにプロトタイプ宣言を追加して紹介状を渡す ---
 uint32_t read_memory_u32(uint64_t address); // mem_shim.h にも書くべきだが、とりあえずここで宣言
