@@ -1,0 +1,32 @@
+name: ARM64 Native Wasm Build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    # 隊員の狙い通り、ARM64ネイティブ環境で動かす！
+    runs-on: ubuntu-24.04-arm
+    
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Emscripten SDKをインストール
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 'latest'
+
+      - name: ビルドスクリプトを実行
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: 成果物をアップロード
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-wasm-arm64
+          path: build_out/
+
