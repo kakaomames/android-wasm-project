@@ -1,48 +1,21 @@
-#include "loader.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <unistd.h>
-#include <libgen.h>
+#include <dlfcn.h>
+#include "loader.h"
 
-// --- 自己修復機能: 階層を再帰的に作る ---
-int ensure_dir_exists(const char *path) {
-    char tmp[256];
-    char *p = NULL;
-    size_t len;
+void* lib_handle = NULL;
 
-    snprintf(tmp, sizeof(tmp), "%s", path);
-    len = strlen(tmp);
-    if (tmp[len - 1] == '/') tmp[len - 1] = 0;
-    for (p = tmp + 1; *p; p++) {
-        if (*p == '/') {
-            *p = 0;
-            mkdir(tmp, S_IRWXU);
-            *p = '/';
-        }
+void load_library(const char* lib_name) {
+    printf("[Loader] ライブラリのロードを開始: %s\n", lib_name);
+    
+    // dlopen でロードを試みる
+    // RTLD_LAZY: 必要になるまでシンボルを解決しない（高速起動用）
+    lib_handle = dlopen(lib_name, RTLD_LAZY);
+    
+    if (!lib_handle) {
+        // ロード失敗！ここが勝負の分かれ目だ
+        fprintf(stderr, "[Error] ロード失敗: %s\n", dlerror());
+        return;
     }
-    return mkdir(tmp, S_IRWXU);
-}
-
-// --- 罠（ハニーポット）: ファイルオープンをフック ---
-int adaptive_open(const char *pathname, int flags, mode_t mode) {
-    int fd = open(pathname, flags, mode);
-
-    // ファイルがなくてエラーになった場合、自動修復を試みる
-    if (fd < 0 && errno == ENOENT) {
-        printf("[Shim] トラップ発動: %s が見つからない。ディレクトリを自動構築する...\n", pathname);
-        
-        char *path_copy = strdup(pathname);
-        char *dir = dirname(path_copy);
-        ensure_dir_exists(dir);
-        free(path_copy);
-
-        // 再度オープンを試みる
-        fd = open(pathname, flags, mode);
-        if (fd >= 0) {
-            printf("[Shim] 自動修復成功: %s を構築したぞ！\n", pathname);
-        }
-    }
-    return fd;
+    
+    printf("[Loader] ロード成功！ハンドルアドレス: %p\n", lib_handle);
 }
