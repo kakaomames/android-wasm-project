@@ -19,16 +19,21 @@ if [ -z "$EMSDK" ]; then
 fi
 
 echo "⚙️ コンパイル処理を実行中..."
-# 出力先を明示的に指定（もしディレクトリを作っていないならここで作る）
 mkdir -p build_out
+emcc src/main.c \
+    -O3 \
+    -s WASM=1 \
+    -s MAIN_MODULE=1 \
+    -o build_out/index.html
 
-# サイドモジュールビルド
-emcc src/library.c -s SIDE_MODULE=1 -o library.js
-
-# メインモジュールビルド (サイドモジュールの存在を意識する)
-emcc src/main.c -s MAIN_MODULE=1 -s LINKABLE=1 -o index.html
-
-
-# 【重要】本当にファイルがあるか確認する
-echo "🔍 成果物の確認:"
+echo "🔎 コンパイル後のbuild_outの中身:"
 ls -la build_out/
+
+echo "🔍 ルートディレクトリの中身 (迷子を探す):"
+ls -la .
+
+# もしbuild_outが空なら、エラーで止めて原因を特定しやすくする
+if [ ! -f "build_out/index.html" ]; then
+    echo "❌ 警告: index.html が build_out/ に見当たらない！"
+    exit 1
+fi
