@@ -25,9 +25,12 @@ mkdir -p build_out
 # -lunicorn を追加してリンクする
 
 # Unicornのパスを明示的に指定してビルドする
+# クォーテーションを整理した最強のコマンド
 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c \
     -o build_out/gem-os.js \
-    -s WASM=1 -s EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']
+    -s WASM=1 \
+    -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']"
+
 
 
 
