@@ -42,16 +42,16 @@ jobs:
           git config --global user.email "bot@example.com"
           
           # 変更があるか確認
-          if git diff --quiet ./dist/assets/ && git diff --staged --quiet; then
-            echo "✨ 変更なし！コミットは不要だ。"
-          else
-            # 変更分を追加
-            git add ./dist/assets/
+          git diff --quiet ./dist/assets/ && git diff --staged --quiet; then
+          echo "✨ 変更なし！コミットは不要だ。"
+          
+          # 変更分を追加
+          git add ./dist/assets/
             
-            # コミット実行
-            git commit -m "chore: 🚀 自動変換されたアセットを追加 [skip ci]"
-            
-            # プッシュ実行
-            git push origin HEAD:main
-            echo "✅ アセットの同期完了！"
-          fi
+          # コミット実行
+          git commit -m "chore: 🚀 自動変換されたアセットを追加 [skip ci]"
+          
+          # プッシュ実行
+          git push origin HEAD:main
+          echo "✅ アセットの同期完了！"
+          
