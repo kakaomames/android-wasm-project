@@ -25,7 +25,7 @@ mkdir -p build_out
 # -lunicorn を追加してリンクする
 
 # Unicornのパスを明示的に指定してビルドする
-emcc src/main.c src/loader.c src/mem_shim.c \
+emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c \
     -o build_out/index.html \
     -s WASM=1 -s MAIN_MODULE=1
 
