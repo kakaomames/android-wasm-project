@@ -17,11 +17,6 @@ if [ -z "$EMSDK" ]; then
     echo "⚠️ EMSDKが見つかりません。セットアップを確認してください。"
     exit 1
 fi
-cd unicorn
-# Emscriptenの環境を使ってCMakeを設定
-emcmake cmake . -DUNICORN_ARCH=arm64 -DCMAKE_BUILD_TYPE=Release
-
-emmake make
 
 
 echo "⚙️ コンパイル処理を実行中..."
@@ -31,8 +26,6 @@ mkdir -p build_out
 
 # Unicornのパスを明示的に指定してビルドする
 emcc src/main.c src/loader.c src/mem_shim.c \
-    -I./unicorn/include \
-    -L./unicorn/build \
     -lunicorn \
     -o build_out/index.html \
     -s WASM=1 -s MAIN_MODULE=1
