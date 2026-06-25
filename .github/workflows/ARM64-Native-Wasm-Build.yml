@@ -24,9 +24,9 @@ jobs:
           chmod +x build.sh
           ./build.sh
 
-      - name: 成果物をアップロード
+      - name: ビルド成果物をアップロード
         uses: actions/upload-artifact@v4
         with:
-          name: emulator-wasm-arm64
-          path: build_out/
-
+          name: gem-os-wasm
+          path: |
+            build_out/*
