@@ -30,3 +30,20 @@ jobs:
           name: gem-os-wasm
           path: |
             build_out/*
+            
+      - name: Commit and Push Logs
+        run: |
+          git config --global user.name "Gemini-Bot"
+          git config --global user.email "bot@example.com"
+          
+          # ZIP以外（ログや時間）だけをステージング
+          git add ./build_out/* || true
+          
+          # 変更がある場合のみコミット
+          if git diff --cached --quiet; then
+            echo "✨ ログ変更なし。"
+          else
+            git commit -m "chore: 📝 自動ビルドログを更新 [skip ci]" || true
+            git push origin HEAD:main || true
+            echo "✅ ログの同期完了！"
+          fi
