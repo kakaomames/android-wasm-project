@@ -4,12 +4,7 @@
 #include <sys/mman.h>
 #include "mem_shim.h"
 
-// APK専用メモリ領域の管理構造体
-typedef struct {
-    uint8_t *base_ptr; // Wasmメモリ上の開始アドレス
-    size_t current_offset;
-    size_t max_size;
-} MemoryManager;
+
 
 MemoryManager guest_mem = {0};
 
