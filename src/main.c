@@ -7,39 +7,23 @@
 // 専門部隊のヘッダー
 #include "loader.h"
 #include "mem_shim.h"
-
 // エミュレーションのメインループ
-void cpu_execute_step() {
-    uc_engine *uc;
-    uc_err err;
+#include "cpu.h"
 
-    printf("[Emulator] 脳(CPU)を起動する...\n");
-
-    // 1. ARM64モードでUnicornエンジンを初期化
-    err = uc_open(UC_ARCH_ARM64, UC_MODE_ARM, &uc);
-    if (err) {
-        printf("[Emulator] 致命的エラー: Unicornエンジンが起動しない! (Error: %u)\n", err);
-        return;
+void run_emulator_loop() {
+    CPUState my_cpu;
+    cpu_init(&my_cpu);
+    
+    printf("[Emulator] Gem-CPU 起動！命令の解釈を開始する...\n");
+    
+    // 10ステップだけ試しに動かしてみるテスト
+    for(int i=0; i<10; i++) {
+        cpu_execute_step(&my_cpu);
     }
-
-    // 2. メモリ空間のリンク
-    // mem_shimで確保した領域をUnicornにマッピングする (仮のアドレス 0x10000000)
-    // ※実際にはAPKのベースアドレスをELF解析で特定してマッピングする
-    uint64_t mem_addr = 0x10000000;
-    size_t mem_size = 64 * 1024 * 1024; // 64MB
-    uc_mem_map(uc, mem_addr, mem_size, UC_PROT_ALL);
-
-    printf("[Emulator] メモリ空間(64MB)をCPUに接続完了。\n");
-
-    // 3. CPUの実行開始 (まずはPCをエントリーポイントへ設定)
-    printf("[Emulator] CPUサイクルを開始する...\n");
-    // ※本来はここにloaderから読み込んだバイナリを書き込む処理が必要
-    // err = uc_emu_start(uc, mem_addr, mem_addr + 0x1000, 0, 0);
-
-    printf("[Emulator] エミュレーション待機中。プログラムをロードせよ！\n");
-
-    uc_close(uc);
+    
+    printf("[Emulator] 試運転完了！\n");
 }
+
 
 int main(int argc, char **argv) {
     printf("🚩 Gem-OS 司令塔: 起動完了！\n");
