@@ -9,7 +9,7 @@
 #include "mem_shim.h"
 
 // エミュレーションのメインループ
-void run_emulator_loop() {
+void cpu_execute_step() {
     uc_engine *uc;
     uc_err err;
 
