@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
-// 専門部隊のヘッダー
+#include <emscripten.h>
 #include "loader.h"
 #include "mem_shim.h"
 // エミュレーションのメインループ
@@ -22,6 +22,20 @@ void run_emulator_loop() {
     printf("[Emulator] 試運転完了！\n");
 }
 
+// JSから直接呼べるようにする
+EMSCRIPTEN_KEEPALIVE
+void run_emulator() {
+    printf("[Emulator] 司令室からの起動信号を受信！\n");
+    
+    // ここで以前作ったCPUループを回す
+    CPUState my_cpu;
+    cpu_init(&my_cpu);
+    
+    for(int i=0; i<5; i++) {
+        cpu_execute_step(&my_cpu);
+    }
+    printf("[Emulator] 処理完了。\n");
+}
 
 int main(int argc, char **argv) {
     printf("🚩 Gem-OS 司令塔: 起動完了！\n");
