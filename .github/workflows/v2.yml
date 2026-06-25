@@ -1,68 +1,37 @@
-# .github/workflows/bundle-android-src.yml
-name: Split AOSP Archive
+name: Extract Android Core
 on:
   workflow_dispatch:
-# ここを追加する！
+
 permissions:
   contents: write
 
 jobs:
-  archive:
+  extract:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Repo
-        run: |
-          mkdir -p ~/bin
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-          chmod a+x ~/bin/repo
-          echo "$HOME/bin" >> $GITHUB_PATH
-      
-      - name: Extract Android Core
-        run: echo "jj"
-
       - name: Surgical Strike (Clone only essential parts)
         run: |
-          # 脳：Javaフレームワークのベース
-          git clone --depth 1 https://android.googlesource.com/platform/frameworks/base.git ./android-src/frameworks/base
-          
-          # 筋肉：システムコア
-          git clone --depth 1 https://android.googlesource.com/platform/system/core.git ./android-src/system/core
-          
-          # 必要に応じて追加（例：UI関連）
-          git clone --depth 1 https://android.googlesource.com/platform/frameworks/native.git ./android-src/frameworks/native
+          mkdir -p ./android-src
+          git clone --depth 1 https://android.googlesource.com/platform/frameworks/base.git ./android-src/frameworks-base
+          git clone --depth 1 https://android.googlesource.com/platform/system/core.git ./android-src/system-core
+          git clone --depth 1 https://android.googlesource.com/platform/frameworks/native.git ./android-src/frameworks-native
 
-      - name: Package Core Components
+      - name: Package Components
         run: |
-          # 核心部だけを tar で固める
-          tar -czf android-core-components.tar.gz -C ./android-src .
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: android-core-v1
-          name: "Android 15 Core Components"
-          files: android-core-components.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Archive by Repository
-        run: |
-          # ディレクトリごとに tar 圧縮する
-          # .repo ディレクトリはメタデータなので除外して、個別のプロジェクトディレクトリを圧縮
-          mkdir archives
+          # ディレクトリごとに個別に圧縮する
+          cd ./android-src
           for dir in */; do
-            if [ "$dir" != ".repo/" ] && [ -d "$dir" ]; then
-              tar -czf "archives/${dir%/}.tar.gz" "$dir"
-            fi
+            # 末尾のスラッシュを除去してファイル名にする
+            name=${dir%/}
+            tar -czf "../${name}.tar.gz" "$dir"
           done
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: android-15-split-archive
-          name: "Android 15 Split Archive"
-          # archives フォルダ内のすべての tar.gz をアップロード
-          files: archives/*.tar.gz
+          tag_name: android-core-v2
+          name: "Android 15 Core Components (Split)"
+          # ワイルドカードで全ての .tar.gz をアップロード！
+          files: ./*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
