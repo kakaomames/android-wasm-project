@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <sys/types.h> // ★これが必要だ！off_t を呼ぶために追加する
 
 // ここが設計図だ！
 typedef struct {
