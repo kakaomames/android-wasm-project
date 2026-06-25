@@ -9,13 +9,22 @@ void cpu_init(CPUState *cpu) {
 }
 
 void cpu_execute_step(CPUState *cpu) {
-    // 1. Fetch: メモリから命令を読み込む（今はダミーのログのみ）
-    // src/cpu.c の13行目
-    printf("[CPU] 実行中... PC: 0x%llx\n", cpu->pc);
+    // 1. Fetch: メモリから命令を取得 (今はメモリマップから直接読む)
+    uint32_t opcode = read_memory_u32(cpu->pc); 
+    printf("[CPU] 実行中... PC: 0x%llx, Opcode: 0x%08x\n", cpu->pc, opcode);
+
+    // 2. Decode & Execute: 命令を判定して実行
+    // ここでビット演算をして命令の「種類」を判別する
+    if ((opcode & 0xFF000000) == 0x52000000) {
+        // 例えば、MOV命令のバイナリパターンなら...
+        execute_mov(cpu, opcode);
+    } else if ((opcode & 0xFF000000) == 0x8B000000) {
+        // ADD命令なら...
+        execute_add(cpu, opcode);
+    } else {
+        printf("[CPU] 未知の命令です！ 0x%08x\n", opcode);
+    }
     
-    // 2. Decode/Execute: ここで命令を判定して分岐する
-    // 例: if (opcode == 0x...) { ... }
-    
-    // 3. PCを更新 (基本は4バイト進める)
+    // 3. PCを更新
     cpu->pc += 4;
 }
