@@ -27,9 +27,10 @@ mkdir -p build_out
 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src/gps.c src/media.c \
     -o build_out/gem-os.js \
     -s WASM=1 \
-    -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" \
+    -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8']" \
     -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" \
     -s ALLOW_MEMORY_GROWTH=1
+
 
 
 
