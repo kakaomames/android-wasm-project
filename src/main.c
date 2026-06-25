@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include "loader.h" // 専門部隊（loader）の力を借りる
+#include <unistd.h> // これが必要だ！
+#include <fcntl.h>  // open() を使うならこれも重要だ
+#include "loader.h" // ローダーの機能も忘れずに
+
 
 int main(int argc, char **argv) {
     printf("🚩 Gem-OS 司令塔: 起動！\n");
