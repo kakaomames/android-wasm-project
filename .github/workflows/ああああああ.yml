@@ -30,7 +30,8 @@ jobs:
       - name: Run Conversion Script
         run: |
           chmod +x ./scripts/process_apk.sh
-          ./scripts/process_apk.sh
+          ./scripts/process_apk.sh > log.txt
+          cp -vf log.txt ./dist/assets/log.txt
           TIME=$(date "+%Y年%m月%d日") || true
           echo "$TIMEに実行" > time.txt || true
           cp -vf "time.txt" "./dist/assets/time.txt"
