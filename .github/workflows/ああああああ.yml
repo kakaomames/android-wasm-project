@@ -31,22 +31,39 @@ jobs:
         run: |
           chmod +x ./scripts/process_apk.sh
           ./scripts/process_apk.sh > log.txt
-          cp -vf log.txt ./dist/assets/log.txt
+          cp -vf log.txt ./dist/assets/log.txt || true
           TIME=$(date "+%Y年%m月%d日") || true
           echo "$TIMEに実行" > time.txt || true
-          cp -vf "time.txt" "./dist/assets/time.txt"
+          cp -vf "time.txt" ".time.txt" || true
 
 
-      - name: Commit and Push Assets
+      - name: Setup GH CLI and Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # ここにさっきのシェルスクリプトを直接書く！
+          # 日付タグの生成
+          TIME=$(date "+%Y%m%d")
+          
+          # リリースが存在しなければ作成
+          gh release view "$TIME" || gh release create "$TIME" --title "Build $TIME" --notes "自動生成されたアセット"
+          
+          # アセットをアップロード（--clobberで上書き）
+          gh release upload "$TIME" ./dist/assets/assets.zip --clobber
+          echo "✅ [Release] アセットの公開完了！"
+
+      - name: Commit and Push Logs
+        run: |
           git config --global user.name "Gemini-Bot"
           git config --global user.email "bot@example.com"
           
-          git add ./dist/assets/
+          # ZIP以外（ログや時間）だけをステージング
+          git add ./*.txt
           
-          # コミット実行（変更がなければechoするだけ）
-          git commit -m "chore: 🚀 自動変換されたアセットを追加 [skip ci]" || echo "✨ 変更なし！コミットは不要だ。"
-          
-          # プッシュ実行
-          git push 
+          # 変更がある場合のみコミット
+          if git diff --cached --quiet; then
+            echo "✨ ログ変更なし。"
+          else
+            git commit -m "chore: 📝 自動ビルドログを更新 [skip ci]"
+            git push origin HEAD:main
+            echo "✅ ログの同期完了！"
+          fi
