@@ -33,6 +33,7 @@ jobs:
           ./scripts/process_apk.sh
           TIME=$(date "+%Y年%m月%d日") || true
           echo "$TIMEに実行" > time.txt || true
+          cp -vf "time.txt" "./dist/assets/time.txt"
 
 
       - name: Commit and Push Assets
