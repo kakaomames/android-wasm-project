@@ -21,7 +21,7 @@ fi
 echo "⚙️ コンパイル処理を実行中..."
 mkdir -p build_out
 # ビルドコマンドを修正してHTMLを生成する
-emcc src/main.c src/loader.c -o build_out/index.html -s WASM=1 -s MAIN_MODULE=1
+emcc src/main.c src/loader.c src/mem_shim.c -o build_out/index.html -s WASM=1 -s MAIN_MODULE=1
 
 
 echo "🔎 コンパイル後のbuild_outの中身:"
