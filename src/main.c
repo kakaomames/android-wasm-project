@@ -17,6 +17,10 @@ void run_emulator() {
     // 1. メモリ空間の確保
     init_guest_memory(1024 * 1024 * 64);
     printf("[System] メモリ領域: 64MB 確保完了。\n");
+    
+    // Unityエンジンをロード！
+    load_library("./libmain.so");
+    load_library("./libunity.so");
 
     // 2. 全ユニットの初期化 (脳・眼・GPSを起動)
     CPUState my_cpu;
