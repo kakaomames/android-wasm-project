@@ -6,8 +6,10 @@
 #include "loader.h"
 #include "mem_shim.h"
 // エミュレーションのメインループ
+
 #include "cpu.h"
 
+EMSCRIPTEN_KEEPALIVE
 void run_emulator_loop() {
     CPUState my_cpu;
     cpu_init(&my_cpu);
