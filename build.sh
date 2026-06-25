@@ -27,6 +27,12 @@ emcc src/main.c \
     -s WASM=1 \
     -s MAIN_MODULE=1 \
     -o build_out/index.html  # index.htmlにすればJSとWasmも一緒にできる
+# サイドモジュールのコンパイル (SIDE_MODULE=1)
+emcc library.c -s SIDE_MODULE=1 -o library.wasm
+
+# メインモジュールのコンパイルはそのまま
+# 実行時にライブラリをロードするJSコードが必要になる
+
 
 # 【重要】本当にファイルがあるか確認する
 echo "🔍 成果物の確認:"
