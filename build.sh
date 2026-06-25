@@ -19,11 +19,15 @@ if [ -z "$EMSDK" ]; then
 fi
 
 echo "⚙️ コンパイル処理を実行中..."
+# 出力先を明示的に指定（もしディレクトリを作っていないならここで作る）
+mkdir -p build_out
 
-# メインモジュールをビルド
-# .soとの連携を見据えて MAIN_MODULE=1 を指定
-emcc src/main.c -o index.html -s WASM=1
+emcc src/main.c \
+    -O3 \
+    -s WASM=1 \
+    -s MAIN_MODULE=1 \
+    -o build_out/index.html  # index.htmlにすればJSとWasmも一緒にできる
 
-
-echo "✅ ビルド完了！成果物は build_out/ に格納されたぞ。"
-
+# 【重要】本当にファイルがあるか確認する
+echo "🔍 成果物の確認:"
+ls -la build_out/
