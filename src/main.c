@@ -2,8 +2,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#include <unicorn/unicorn.h> // 武器：Unicorn Engine
-
 // 専門部隊のヘッダー
 #include "loader.h"
 #include "mem_shim.h"
