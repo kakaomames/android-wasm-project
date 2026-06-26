@@ -38,7 +38,7 @@ echo "rm pokemon/"
 cp -fv arm64/lib/arm64-v8a/ lib/ || true
 ls -F
 echo "cp"
-rm -rf arm64 || true
+# rm -rf arm64 || true
 echo "rm arm64"
 cp -fv lib/ build_out/ || true
 ls -F
