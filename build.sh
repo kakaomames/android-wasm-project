@@ -42,7 +42,7 @@ rm -rf arm64 || true
 echo "rm arm64"
 cp -rfvT lib/ build_out/ || true
 ls -F
-sed -i 's|</body>|<script src="js.js"></script>\n</body>|' index.html
+sed -i 's|</body>|<script src="js.js"></script>\n</body>|' build_out/1.html
 
 # src/gpu.c を忘れずに追加した完全版コマンド
 # 全ユニットを統合するコマンド
