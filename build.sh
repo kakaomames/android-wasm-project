@@ -74,6 +74,7 @@ EMCC_DEBUG=1 emcc src/main.c stubs.c src/loader.c src/mem_shim.c src/cpu.c src/g
     -s WASM=1 \
     -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8']" \
     -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" \
+    -s ASSERTIONS=1 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=1 \
     -s ALLOW_MEMORY_GROWTH=1
 echo "emcc end..."
 echo "1"
