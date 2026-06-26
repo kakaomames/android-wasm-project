@@ -89,8 +89,18 @@ echo "🔎 コンパイル後のbuild_outの中身:"
 ls -la build_out/
 
 echo "必要な関数の一覧を出す（依存関係の確認）"
+
 echo "nm -D build_out/libmain.so | grep ' U ' || true"
 nm -D build_out/libmain.so | grep " U " || true
+
+echo "nm -D build_out/libAkSoundEngine.so | grep ' U ' || true"
+nm -D build_out/libAkSoundEngine.so | grep " U " || true
+
+echo "nm -D build_out/libil2cpp.so | grep ' U ' || true"
+nm -D build_out/libil2cpp.so | grep " U " || true
+
+echo "nm -D build_out/libunity.so | grep ' U ' || true"
+nm -D build_out/libunity.so | grep " U " || true
 
 
 echo "🔍 ルートディレクトリの中身 (迷子を探す):"
