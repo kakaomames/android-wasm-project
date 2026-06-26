@@ -38,9 +38,9 @@ echo "rm pokemon/"
 cp -rfv arm64/lib/arm64-v8a lib/ || true
 ls -F
 echo "cp"
-# rm -rf arm64 || true
+rm -rf arm64 || true
 echo "rm arm64"
-cp -rfv arm64/lib/arm64-v8a/ build_out/ || true
+cp -rfvT lib/ build_out/ || true
 ls -F
 # src/gpu.c を忘れずに追加した完全版コマンド
 # 全ユニットを統合するコマンド
