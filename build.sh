@@ -44,6 +44,18 @@ rm -rf arm64 || true
 echo "rm arm64"
 cp -rfvT lib/ build_out/ || true
 ls -F
+# 1. 最初にファイルを空にして初期化（上書きモード）
+echo "--- Dependency List ---" > nm.txt
+
+# 2. ループで全ファイルを処理（追記モード）
+for f in build_out/*.so; do
+    echo "nm -D $f | grep ' U ' "
+    echo -e "\n=== $f ===" >> nm.txt
+    nm -D "$f" | grep ' U ' >> nm.txt
+done
+
+python gen_stubs.py || true
+
 echo "8"
 echo "7"
 echo "6"
@@ -92,28 +104,6 @@ ls -la build_out/
 
 echo "必要な関数の一覧を出す（依存関係の確認）"
 
-
-# 1. 最初にファイルを空にして初期化（上書きモード）
-echo "--- Dependency List ---" > nm.txt
-
-# 2. ループで全ファイルを処理（追記モード）
-for f in build_out/*.so; do
-    echo "nm -D $f | grep ' U ' "
-    echo -e "\n=== $f ===" >> nm.txt
-    nm -D "$f" | grep ' U ' >> nm.txt
-done
-
-echo "nm -D build_out/libmain.so | grep ' U ' || true"
-# nm -D build_out/libmain.so | grep " U " || true
-
-echo "nm -D build_out/libAkSoundEngine.so | grep ' U ' || true"
-# nm -D build_out/libAkSoundEngine.so | grep " U " || true
-
-echo "nm -D build_out/libil2cpp.so | grep ' U ' || true"
-# nm -D build_out/libil2cpp.so | grep " U " || true
-
-echo "nm -D build_out/libunity.so | grep ' U ' || true"
-# nm -D build_out/libunity.so | grep " U " || true
 
 
 echo "🔍 ルートディレクトリの中身 (迷子を探す):"
