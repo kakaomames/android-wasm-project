@@ -21,4 +21,4 @@ def generate_stubs(input_file):
     print(f"Generated {len(symbols)} stubs in stubs.c")
 
 # 使い方: nmの出力をファイル(nm_output.txt)に保存して実行
-generate_stubs('nm_output.txt')
+generate_stubs('nm.txt')
