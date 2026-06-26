@@ -50,17 +50,17 @@ echo ""
 echo ""
 echo ""
 echo ""
-echo ""
+echo "emcc start!"
 
 # src/gpu.c を忘れずに追加した完全版コマンド
 # 全ユニットを統合するコマンド
-emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src/gps.c src/media.c \
+EMCC_DEBUG=1 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src/gps.c src/media.c \
     -o build_out/1.html \
     -s WASM=1 \
     -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8']" \
     -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" \
     -s ALLOW_MEMORY_GROWTH=1
-echo ""
+echo "emcc end..."
 echo ""
 echo ""
 echo ""
