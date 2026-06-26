@@ -42,14 +42,14 @@ rm -rf arm64 || true
 echo "rm arm64"
 cp -rfvT lib/ build_out/ || true
 ls -F
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
+echo "8"
+echo "7"
+echo "6"
+echo "5"
+echo "4"
+echo "3"
+echo "2"
+echo "1"
 echo "emcc start!"
 
 # src/gpu.c を忘れずに追加した完全版コマンド
@@ -61,15 +61,15 @@ EMCC_DEBUG=1 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src
     -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" \
     -s ALLOW_MEMORY_GROWTH=1
 echo "emcc end..."
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
+echo "1"
+echo "2"
+echo "3"
+echo "4"
+echo "5"
+echo "6"
+echo "7"
+echo "8"
+echo "9"
 
 
 
@@ -88,8 +88,9 @@ sed -i 's|</body>|<script src="js.js"></script>\n</body>|' build_out/1.html
 echo "🔎 コンパイル後のbuild_outの中身:"
 ls -la build_out/
 
-# 必要な関数の一覧を出す（依存関係の確認）
-nm -D libmain.so | grep " U " || true
+echo "必要な関数の一覧を出す（依存関係の確認）"
+echo "nm -D build_out/libmain.so | grep ' U ' || true"
+nm -D build_out/libmain.so | grep " U " || true
 
 
 echo "🔍 ルートディレクトリの中身 (迷子を探す):"
