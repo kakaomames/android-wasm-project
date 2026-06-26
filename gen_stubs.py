@@ -35,21 +35,25 @@ def generate_stubs(input_file):
     # 今回エラーが出た全ての関数をここに追加した
     # ignore_list = {"dlopen", "dlsym", "dlclose", "dlerror","fopen", "fclose", "fread", "fwrite", "fprintf", "fscanf", "fseek", "clearerr", "fseeko", "ftell", "ftello", "fgets", "fputs", "fputc", "fflush", "feof", "ferror", "fileno", "freopen", "perror", "puts", "sprintf", "sscanf", "vasprintf", "vprintf", "vsscanf", "remove", "rename", "fdopen", "acos", "acosf", "asin", "asinf", "atan", "atanf", "atan2", "atan2f", "cos", "cosf", "exp", "expf", "exp2", "exp2f", "fmod", "fmodf", "hypot", "log", "log10", "log10f", "log2f", "logb", "logf", "pow", "powf", "sqrt", "sqrtf", "sin", "sincosf", "sinf", "tan", "tanf", "ldexp", "ldexpf", "modf", "modff", "nearbyintf", "remainderf", "scalbn", "calloc", "malloc", "free", "realloc", "memcpy", "memmove", "memset", "memalign", "memchr", "memcmp", "strlen", "strcmp", "strcpy", "strncpy", "strcat", "strchr", "strcspn", "strdup", "strerror", "strlcpy", "strncat", "strncmp", "strrchr", "strspn", "strstr", "strcasecmp", "strtod", "strtof", "strtol", "strtold", "strtoll", "strtoul", "strtoull", "strxfrm", "isalnum", "isalpha", "islower", "isspace", "isupper", "isxdigit", "tolower", "toupper", "abort", "_exit", "exit", "printf", "snprintf", "vfprintf", "vsnprintf", "wcslen", "wmemchr", "wmemcmp", "wmemcpy", "wmemmove", "pthread_create", "pthread_join", "pthread_mutex_lock", "pthread_mutex_unlock"}
     ignore_list = {
-        # Math系 (エラーが出たもの)
+        # Math系
         "acos", "acosf", "asin", "asinf", "atan", "atan2", "atan2f", "atanf",
         "cos", "cosf", "exp", "expf", "fmod", "hypot", "log", "log10", "pow",
         "sqrt", "sin", "sinf", "tan", "tanf", "modf", "modff", "nearbyintf",
+        "remainderf", "scalbn",
         # Stdlib / Malloc系
         "calloc", "malloc", "free", "realloc", "posix_memalign", "abort", "exit", "_exit",
         # Stdio系
         "clearerr", "fclose", "feof", "ferror", "fflush", "fgetc", "fgets",
         "fopen", "fprintf", "fputc", "fputs", "fread", "fseek", "fwrite",
         "printf", "snprintf", "sprintf", "sscanf", "vfprintf", "vsnprintf",
-        # String系
+        # String系 / Wide Char系
         "memchr", "memcmp", "memcpy", "memmove", "memset",
         "strcat", "strchr", "strcmp", "strcpy", "strlen", "strncmp", "strncpy",
+        "wmemchr", "wmemcmp", "wmemcpy", "wmemmove", "wcslen", "wcrtomb",
         # その他
-        "raise", "lseek", "strnlen", "wcrtomb"
+        "raise", "lseek", "strnlen", "strcasecmp", "strdup", "strtod", "strtof",
+        "strtol", "strtold", "strtoll", "strtoul", "strtoull", "strxfrm",
+        "isalnum", "isalpha", "islower", "isspace", "isupper", "isxdigit", "tolower", "toupper"
     }
 
 
