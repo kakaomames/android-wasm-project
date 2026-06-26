@@ -9,6 +9,7 @@ echo "🚩 コンパイル隊、出撃！ (Build for ARM64-v8a)"
 sudo apt-get update
 sudo apt-get install -y build-essential cmake
 TIME=$(date)
+echo "$TIME" > 2log.txt
 
 # 出力ディレクトリの作成
 mkdir -p build_out
