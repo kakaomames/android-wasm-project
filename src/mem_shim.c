@@ -3,7 +3,29 @@
 #include <stdint.h>
 #include <sys/mman.h>
 #include "mem_shim.h"
+#include <string.h>
 
+// dlopen の代わりに使うモック
+void* dlopen(const char *filename, int flags) {
+    printf("[Shim] dlopen が呼ばれた: %s\n", filename);
+    
+    // ここで君のローダーを呼び出す！
+    // 例: load_library_into_guest_memory(filename);
+    
+    // 成功したと仮定して、擬似的なハンドルを返す
+    return (void*)0x12345678; 
+}
+
+void* dlsym(void *handle, const char *symbol) {
+    printf("[Shim] dlsym が呼ばれた: %s\n", symbol);
+    // ここでメモリマップからシンボルのアドレスを検索する関数を呼ぶ
+    return NULL; // アドレスが見つかったらそれを返す
+}
+
+int dlclose(void *handle) {
+    printf("[Shim] dlclose が呼ばれた\n");
+    return 0;
+}
 
 
 MemoryManager guest_mem = {0};
