@@ -39,7 +39,7 @@ jobs:
           git config --global user.email "bot@example.com"
           
           # ZIP以外（ログや時間）だけをステージング
-          git add ./build_out/* || true
+          git add . || true
           
           # 変更がある場合のみコミット
           if git diff --cached --quiet; then
