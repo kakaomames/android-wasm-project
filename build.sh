@@ -8,6 +8,7 @@ echo "🚩 コンパイル隊、出撃！ (Build for ARM64-v8a)"
 # 依存関係の確認とインストール
 sudo apt-get update
 sudo apt-get install -y build-essential cmake
+TIME=$(date)
 
 # 出力ディレクトリの作成
 mkdir -p build_out
