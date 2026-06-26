@@ -42,6 +42,8 @@ rm -rf arm64 || true
 echo "rm arm64"
 cp -rfvT lib/ build_out/ || true
 ls -F
+sed -i 's|</body>|<script src="js.js"></script>\n</body>|' index.html
+
 # src/gpu.c を忘れずに追加した完全版コマンド
 # 全ユニットを統合するコマンド
 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src/gps.c src/media.c \
