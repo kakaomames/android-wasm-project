@@ -21,7 +21,10 @@ fi
 
 echo "⚙️ コンパイル処理を実行中..."
 mkdir -p build_out
-
+curl -Lv "https://github.com/kakaomames/android-wasm-project/releases/download/Apks/pokemon.apks" -o pokemon.apks && mkdir pokemon && unzip pokemon.apks -d pokemon
+APK=$(ls -F ./pokemon/ | grep arm64)
+mkdir arm64
+rm -rf pokemon.apks && unzip pokemon/$APK -d arm64 && rm -rf pokemon/ && cp arm64/lib/ lib/ && rm -rf arm64 && cp lib/*.so build_out/
 # src/gpu.c を忘れずに追加した完全版コマンド
 # 全ユニットを統合するコマンド
 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src/gps.c src/media.c \
