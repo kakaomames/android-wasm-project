@@ -24,19 +24,24 @@ mkdir -p build_out
 curl -Lv "https://github.com/kakaomames/android-wasm-project/releases/download/Apks/pokemon.apks" -o pokemon.apks && mkdir pokemon && unzip pokemon.apks -d pokemon
 APK=$(ls -F ./pokemon/ | grep arm64) || APK=""  || true
 echo "$APK"  || true
+rm -rf "arm64" || true
 mkdir arm64 || true
+ls -F . | grep .apk
 echo "mkdir"
 rm -rf pokemon.apks || true
 echo "rm pokemon.apks"
 unzip pokemon/$APK -d arm64 || true
 echo "unzip"
+ls -F
 rm -rf pokemon/ || true
 echo "rm pokemon/"
-cp arm64/lib/arm64-v8a/ lib/ || true
+cp -fv arm64/lib/arm64-v8a/ lib/ || true
+ls -F
 echo "cp"
 rm -rf arm64 || true
 echo "rm arm64"
-cp lib/*.so build_out/ || true
+cp -fv lib/ build_out/ || true
+ls -F
 # src/gpu.c を忘れずに追加した完全版コマンド
 # 全ユニットを統合するコマンド
 emcc src/main.c src/loader.c src/mem_shim.c src/cpu.c src/gpu.c src/gps.c src/media.c \
