@@ -11,7 +11,7 @@ sudo apt-get install -y build-essential cmake
 
 # 出力ディレクトリの作成
 mkdir -p build_out
-
+rm -rf aosp_core || true
 # Emscriptenのパス確認
 if [ -z "$EMSDK" ]; then
     echo "⚠️ EMSDKが見つかりません。セットアップを確認してください。"
