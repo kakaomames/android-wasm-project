@@ -88,6 +88,10 @@ sed -i 's|</body>|<script src="js.js"></script>\n</body>|' build_out/1.html
 echo "🔎 コンパイル後のbuild_outの中身:"
 ls -la build_out/
 
+# 必要な関数の一覧を出す（依存関係の確認）
+nm -D libmain.so | grep " U " || true
+
+
 echo "🔍 ルートディレクトリの中身 (迷子を探す):"
 ls -la .
 
