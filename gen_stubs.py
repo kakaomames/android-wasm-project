@@ -8,7 +8,7 @@ def generate_stubs(input_file):
     # 今回エラーが出た全ての関数をここに追加した
     ignore_list = {
         # stdio系
-        "fopen", "fclose", "fread", "fwrite", "fprintf", "fscanf", "fseek", "fseeko", "ftell", "ftello",
+        "fopen", "fclose", "fread", "fwrite", "fprintf", "fscanf", "fseek", "clearerr", "fseeko", "ftell", "ftello",
         "fgets", "fputs", "fputc", "fflush", "feof", "ferror", "fileno", "freopen",
         "perror", "puts", "sprintf", "sscanf", "vasprintf", "vprintf", "vsscanf", "remove", "rename", "fdopen",
         # 数学系
