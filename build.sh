@@ -14,6 +14,7 @@ if [ ! -d "raylib" ]; then
 fi
 find . -name "CMakeLists.txt"
 ls -F raylib/
+ls -F 
 echo "kokokokokokokokoko"
 # 2. WASM用ビルドディレクトリ作成
 cd raylib
