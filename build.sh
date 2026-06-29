@@ -17,6 +17,7 @@ fi
 cd raylib
 mkdir -p build_web
 cd build_web
+find . -name "CMakeLists.txt"
 
 # 2. 正確なパスでCMakeを実行（'..' は親ディレクトリを指すので、一つ上のCMakeLists.txtを見に行く）
 emcmake cmake .. -DPLATFORM=Web -DBUILD_EXAMPLES=OFF
