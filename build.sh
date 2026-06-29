@@ -59,7 +59,7 @@ emcmake cmake .. -DPLATFORM=Web -DBUILD_EXAMPLES=OFF
 emmake make
 
 # 4. メインプロジェクトに戻ってコンパイル
-cd ../..
+cd ../../..
 
 TIME=$(date)
 echo "$TIME" > 2log.txt
@@ -79,9 +79,9 @@ echo "⚙️ コンパイル処理を実行中..."
 echo "emcc start!"
 
 
-emcc ../../../main.c -o ../../../build_out/game_core.js \
-    -I ../src \
-    -L raylib/ \
+emcc main.c -o build_out/game_core.js \
+    -I raylib/raylib-master/src \
+    -L raylib/raylib-master \
     -lraylib \
     -s WASM=1 \
     -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8'] \
