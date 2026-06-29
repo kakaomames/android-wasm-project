@@ -13,12 +13,16 @@ if [ ! -d "raylib" ]; then
     git clone https://github.com/raysan5/raylib.git
 fi
 find . -name "CMakeLists.txt"
+ls -F raylib/
 echo "kokokokokokokokoko"
 # 2. WASM用ビルドディレクトリ作成
 cd raylib
+ls -F .
 mkdir -p build_web
+
 cd build_web
 find . -name "CMakeLists.txt"
+
 
 # 2. 正確なパスでCMakeを実行（'..' は親ディレクトリを指すので、一つ上のCMakeLists.txtを見に行く）
 emcmake cmake .. -DPLATFORM=Web -DBUILD_EXAMPLES=OFF
