@@ -8,6 +8,22 @@ echo "🚩 コンパイル隊、出撃！ (Build for ARM64-v8a)"
 # 依存関係の確認とインストール
 sudo apt-get update
 sudo apt-get install -y build-essential cmake
+# 1. Raylibをクローン
+if [ ! -d "raylib" ]; then
+    git clone https://github.com/raysan5/raylib.git
+fi
+
+# 2. WASM用ビルドディレクトリ作成
+mkdir -p raylib/build_web
+cd raylib/build_web
+
+# 3. Emscripten環境でCMake実行 (WASM用)
+emcmake cmake .. -DPLATFORM=Web -DBUILD_EXAMPLES=OFF
+emmake make
+
+# 4. メインプロジェクトに戻ってコンパイル
+cd ../..
+
 TIME=$(date)
 echo "$TIME" > 2log.txt
 
@@ -25,15 +41,26 @@ echo "⚙️ コンパイル処理を実行中..."
 
 echo "emcc start!"
 
-# src/gpu.c を忘れずに追加した完全版コマンド
-# 全ユニットを統合するコマンド
-EMCC_DEBUG=1 emcc /main.c \
+EMCC_DEBUG=1 emcc main.c \
     -o build_out/game_core.js \
+    -I raylib/src \
+    -L raylib/build_web/raylib \
+    -lraylib \
     -s WASM=1 \
     -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8']" \
     -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" \
-    -s ASSERTIONS=1 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=1 \
-    -s ALLOW_MEMORY_GROWTH=1
+    -s ASSERTIONS=1 \
+    -s SAFE_HEAP=1 \
+    -s STACK_OVERFLOW_CHECK=1 \
+    -s ALLOW_MEMORY_GROWTH=1 \
+    -s USE_GLFW=3 \
+    -s ASYNCIFY
+
+
+    
+# EMCC_DEBUG=1 emcc /main.c -o build_out/game_core.js -s WASM=1 -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8']" -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" -s ASSERTIONS=1 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=1 -s ALLOW_MEMORY_GROWTH=1
+
+echo "✨ ビルド完了！index.htmlをサーバーで開いてくれ！"
 echo "emcc end..."
 
 
