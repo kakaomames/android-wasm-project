@@ -81,7 +81,7 @@ echo "emcc start!"
 
 emcc main.c -o build_out/game_core.js \
     -I raylib/raylib-master/src \
-    -L raylib/raylib-master \
+    -L $(find . -name "libraylib.a") \
     -lraylib \
     -s WASM=1 \
     -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8'] \
