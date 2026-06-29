@@ -12,19 +12,46 @@ sudo apt-get install -y build-essential cmake
 if [ ! -d "raylib" ]; then
     git clone https://github.com/raysan5/raylib.git
 fi
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+
+echo "=========================="
+echo "=========================="
+echo "=========================="
+
 find . -name "CMakeLists.txt"
+echo "=========================="
+echo "もしこの上にないならfind失敗"
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
 ls -F raylib/
 ls -F 
-echo "kokokokokokokokoko"
+echo "=========================="
 # 2. WASM用ビルドディレクトリ作成
 cd raylib
 ls -F .
 mkdir -p build_web
 
 cd build_web
+echo "=========================="
 find . -name "CMakeLists.txt"
 
-
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
+echo "=========================="
 # 2. 正確なパスでCMakeを実行（'..' は親ディレクトリを指すので、一つ上のCMakeLists.txtを見に行く）
 emcmake cmake .. -DPLATFORM=Web -DBUILD_EXAMPLES=OFF
 emmake make
