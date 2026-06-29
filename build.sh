@@ -12,7 +12,8 @@ sudo apt-get install -y build-essential cmake
 if [ ! -d "raylib" ]; then
     git clone https://github.com/raysan5/raylib.git
 fi
-
+find . -name "CMakeLists.txt"
+echo "kokokokokokokokoko"
 # 2. WASM用ビルドディレクトリ作成
 cd raylib
 mkdir -p build_web
