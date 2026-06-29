@@ -14,10 +14,11 @@ if [ ! -d "raylib" ]; then
 fi
 
 # 2. WASM用ビルドディレクトリ作成
-mkdir -p raylib/build_web
-cd raylib/build_web
+cd raylib
+mkdir -p build_web
+cd build_web
 
-# 3. Emscripten環境でCMake実行 (WASM用)
+# 2. 正確なパスでCMakeを実行（'..' は親ディレクトリを指すので、一つ上のCMakeLists.txtを見に行く）
 emcmake cmake .. -DPLATFORM=Web -DBUILD_EXAMPLES=OFF
 emmake make
 
