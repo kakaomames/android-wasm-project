@@ -9,10 +9,9 @@ echo "🚩 コンパイル隊、出撃！ (Build for ARM64-v8a)"
 sudo apt-get update
 sudo apt-get install -y build-essential cmake
 # 1. Raylibをクローン
-if [ ! -d "raylib" ]; then
-    curl -vL https://github.com/raysan5/raylib/archive/refs/heads/master.zip -o raylib.zip
-    unzip raylib.zip -d raylib
-fi
+
+curl -vL https://github.com/raysan5/raylib/archive/refs/heads/master.zip -o raylib.zip
+unzip raylib.zip -d raylib
 echo "=========================="
 echo "=========================="
 echo "=========================="
