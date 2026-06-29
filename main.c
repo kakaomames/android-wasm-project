@@ -1,6 +1,8 @@
 #include "raylib.h"
 #include <stdio.h>
-
+// main.c のどこかに追記しておく
+void run_emulator(void) {}
+void update_gps_from_js(void) {}
 // --- 1. 構造体定義 ---
 typedef struct {
     char name[32];
