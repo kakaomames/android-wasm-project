@@ -10,7 +10,8 @@ sudo apt-get update
 sudo apt-get install -y build-essential cmake
 # 1. Raylibをクローン
 if [ ! -d "raylib" ]; then
-    git clone https://github.com/raysan5/raylib.git
+    curl -vL https://github.com/raysan5/raylib/archive/refs/heads/master.zip -o raylib.zip
+    unzip raylib.zip -d raylib
 fi
 echo "=========================="
 echo "=========================="
@@ -38,11 +39,13 @@ ls -F raylib/
 ls -F 
 echo "=========================="
 # 2. WASM用ビルドディレクトリ作成
-cd raylib
-ls -F .
-mkdir -p build_web
+cd raylib/raylib-master
 
+# 2. ビルド用ディレクトリを作成して移動
+mkdir -p build_web
 cd build_web
+ls -F .
+
 echo "=========================="
 find . -name "CMakeLists.txt"
 
