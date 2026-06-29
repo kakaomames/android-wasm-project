@@ -4,19 +4,18 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build:
-    # 隊員の狙い通り、ARM64ネイティブ環境で動かす！
     runs-on: ubuntu-24.04-arm
-    
     steps:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v4
-      - uses: actions/upload-pages-artifact@v3
-      - uses: actions/deploy-pages@v5
 
       - name: Emscripten SDKをインストール
         uses: mymindstorm/setup-emsdk@v14
@@ -32,18 +31,18 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gem-os-wasm
-          path: |
-            build_out/*
-            
+          path: build_out/*
+
+      - name: GitHub Pages用アーティファクト作成
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build_out/ # ここにデプロイ対象のフォルダを指定
+
       - name: Commit and Push Logs
         run: |
           git config --global user.name "Gemini-Bot"
           git config --global user.email "bot@example.com"
-          
-          # ZIP以外（ログや時間）だけをステージング
           git add . || true
-          
-          # 変更がある場合のみコミット
           if git diff --cached --quiet; then
             echo "✨ ログ変更なし。"
           else
@@ -51,9 +50,18 @@ jobs:
             git push origin HEAD:main || true
             echo "✅ ログの同期完了！"
           fi
-    
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v5
 
   notify:
-    needs: build # deployが終わってから実行
+    needs: deploy
     runs-on: ubuntu-latest
+    steps:
+      - name: Install gcloud
+        run: |
+          sudo apt-get update
