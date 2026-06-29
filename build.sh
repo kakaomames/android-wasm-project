@@ -41,7 +41,8 @@ echo "⚙️ コンパイル処理を実行中..."
 
 echo "emcc start!"
 
-EMCC_DEBUG=1 emcc main.c \
+
+emcc main.c \
     -o build_out/game_core.js \
     -I raylib/src \
     -L raylib/build_web/raylib \
