@@ -79,7 +79,7 @@ echo "⚙️ コンパイル処理を実行中..."
 echo "emcc start!"
 
 
-emcc ../../main.c -o ../../build_out/game_core.js \
+emcc ../../../main.c -o ../../../build_out/game_core.js \
     -I ../src \
     -L raylib/ \
     -lraylib \
