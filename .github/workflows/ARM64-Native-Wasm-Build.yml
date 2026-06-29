@@ -24,6 +24,7 @@ jobs:
 
       - name: ビルドスクリプトを実行
         run: |
+          cp -rf "/home/runner/work/_temp/dba2cc49-4626-4e93-861c-b1d790b47ce9/emsdk-main/emsdk" "./"
           chmod +x build.sh
           ./build.sh
 
