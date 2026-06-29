@@ -79,20 +79,19 @@ echo "⚙️ コンパイル処理を実行中..."
 echo "emcc start!"
 
 
-emcc main.c \
-    -o build_out/game_core.js \
-    -I raylib/src \
-    -L raylib/build_web/raylib \
+emcc ../../main.c -o ../../build_out/game_core.js \
+    -I ../src \
+    -L raylib/ \
     -lraylib \
     -s WASM=1 \
-    -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8']" \
-    -s "EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js']" \
+    -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPU8'] \
+    -s EXPORTED_FUNCTIONS=['_main','_run_emulator','_update_gps_from_js'] \
     -s ASSERTIONS=1 \
     -s SAFE_HEAP=1 \
-    -s STACK_OVERFLOW_CHECK=1 \
     -s ALLOW_MEMORY_GROWTH=1 \
     -s USE_GLFW=3 \
-    -s ASYNCIFY
+    -s ASYNCIFY \
+    -DPLATFORM_WEB
 
 
     
