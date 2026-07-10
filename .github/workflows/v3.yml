@@ -43,7 +43,6 @@ jobs:
       - name: Run x86_64 Emulator and Safely Install Packages
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          # API 30 の google_apis (x86_64) を使うことで、内部のARM翻訳機能を利用するぞ！
           api-level: 30
           target: google_apis
           arch: x86_64
@@ -52,35 +51,27 @@ jobs:
             echo "ACTION: x86_64エミュレータが正常起動しました！"
             adb devices
 
-            # --- 作戦1: 単体APKのインストール ---
-            for apk in *.apk; do
-              if [ -f "$apk" ]; then
-                echo "ACTION: 単体APKインストール中 -> $apk"
-                adb install -r "$apk"
-              fi
-            done
+            echo "ACTION: 単体APKのインストールを開始します..."
+            for apk in *.apk; do [ -f "$apk" ] && (echo "ACTION: 単体APKインストール中 -> $apk"; adb install -r "$apk"); done
 
-            # --- 作戦2: パッケージの個別解凍＆一括インストール ---
+            echo "ACTION: 複合パッケージの個別解凍＆一括インストールを開始します..."
             for package in *.apks *.xapk *.apkm; do
               if [ -f "$package" ]; then
                 echo "--------------------------------------------------"
                 echo "ACTION: パッケージを発見 -> $package"
-                
                 tmp_dir="tmp_${package//./_}"
                 mkdir -p "$tmp_dir"
-                
                 echo "ACTION: $package を $tmp_dir に解凍中..."
                 unzip -o "$package" -d "$tmp_dir/" || true
                 
+                # APKが存在する場合のみinstall-multipleを実行
                 if [ -n "$(find "$tmp_dir" -name "*.apk" -print -quit)" ]; then
                   echo "ACTION: $package の中身を一括インストール中..."
-                  # --bypass-low-target-sdk-block を一応つけて古いアプリでも入りやすくするお守り
                   find "$tmp_dir" -name "*.apk" -print0 | xargs -0 adb install-multiple -r
                   echo "ACTION: $package のインストールが完了しました！"
                 else
                   echo "ACTION: [WARNING] APKが見つかりませんでした。"
                 fi
-                
                 rm -rf "$tmp_dir"
               fi
             done
@@ -88,4 +79,4 @@ jobs:
             echo "--------------------------------------------------"
             echo "ACTION: パッケージ一覧を確認します："
             adb shell pm list packages
-            echo "ACTION: ミッション完了！宿敵『FATALエラー』を撃破したぜ！"
+            echo "ACTION: 全てのミッションが正常に完了しました！お疲れ様です、隊員！"
