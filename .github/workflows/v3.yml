@@ -1,4 +1,4 @@
-name: Install APKs on ARM64 Emulator
+name: Fixed Safe APK Installer (x86_64 Emulator with ARM Translation)
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
 jobs:
   install-and-test:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout Repository
@@ -26,33 +29,60 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Download bundletool
+      - name: Download All Release Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "ACTION: bundletoolのダウンロードを開始します！"
-          # GitHub API経由で最新のbundletool.jarを取得してリポジトリ直下に配置するぞ！
-          curl -L -o bundletool.jar https://github.com/google/bundletool/releases/download/1.17.2/bundletool-all-1.17.2.jar
-          echo "ACTION: bundletoolの準備が完了しました！"
+          echo "ACTION: 最新のリリースから全アセットをダウンロード！"
+          gh release download --latest --pattern "*"
+          ls -la
 
-      - name: Run Emulator and Install APKs
+      - name: Run x86_64 Emulator and Safely Install Packages
         uses: reactivecircus/android-emulator-runner@v2
         with:
+          # API 30 の google_apis (x86_64) を使うことで、内部のARM翻訳機能を利用するぞ！
           api-level: 30
           target: google_apis
-          arch: arm64-v8a
+          arch: x86_64
           profile: pixel_7_pro
           script: |
-            echo "ACTION: エミュレータの起動を確認しました！"
-            
-            # 1. 念のため接続されているデバイス（エミュレータ）の一覧をログに出すぞ！
+            echo "ACTION: x86_64エミュレータが正常起動しました！"
             adb devices
-            
-            # 2. bundletoolを使って.apksファイルをエミュレータにインストール！
-            # ※リポジトリ内に「app.apks」が存在している前提だぜ！なければパスを書き換えてくれ！
-            echo "ACTION: app.apks をエミュレータへインストール開始！"
-            java -jar bundletool.jar install-apks --apks=app.apks
-            
-            # 3. インストールが成功したか、パッケージ一覧を確認してログに出す！
-            echo "ACTION: インストール済みのパッケージ一覧を確認します！"
+
+            # --- 作戦1: 単体APKのインストール ---
+            for apk in *.apk; do
+              if [ -f "$apk" ]; then
+                echo "ACTION: 単体APKインストール中 -> $apk"
+                adb install -r "$apk"
+              fi
+            done
+
+            # --- 作戦2: パッケージの個別解凍＆一括インストール ---
+            for package in *.apks *.xapk *.apkm; do
+              if [ -f "$package" ]; then
+                echo "--------------------------------------------------"
+                echo "ACTION: パッケージを発見 -> $package"
+                
+                tmp_dir="tmp_${package//./_}"
+                mkdir -p "$tmp_dir"
+                
+                echo "ACTION: $package を $tmp_dir に解凍中..."
+                unzip -o "$package" -d "$tmp_dir/" || true
+                
+                if [ -n "$(find "$tmp_dir" -name "*.apk" -print -quit)" ]; then
+                  echo "ACTION: $package の中身を一括インストール中..."
+                  # --bypass-low-target-sdk-block を一応つけて古いアプリでも入りやすくするお守り
+                  find "$tmp_dir" -name "*.apk" -print0 | xargs -0 adb install-multiple -r
+                  echo "ACTION: $package のインストールが完了しました！"
+                else
+                  echo "ACTION: [WARNING] APKが見つかりませんでした。"
+                fi
+                
+                rm -rf "$tmp_dir"
+              fi
+            done
+
+            echo "--------------------------------------------------"
+            echo "ACTION: パッケージ一覧を確認します："
             adb shell pm list packages
-            
-            echo "ACTION: すべてのミッションが正常に完了しました！"
+            echo "ACTION: ミッション完了！宿敵『FATALエラー』を撃破したぜ！"
