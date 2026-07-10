@@ -33,8 +33,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "ACTION: 最新のリリースから全アセットをダウンロード！"
-          gh release download --latest --pattern "*"
+          echo "ACTION: タグ名 'Apks' のリリースから全アセットをダウンロード！"
+          # '--latest' を消して、代わりに 'Apks' を指定するぞ！
+          gh release download Apks --pattern "*"
+          
+          echo "ACTION: ダウンロード完了！ファイル一覧を表示します："
           ls -la
 
       - name: Run x86_64 Emulator and Safely Install Packages
